@@ -1,2 +1,3 @@
-__all__ = ["WhereLives"]
+__all__ = ["WhereLives", "DiskCheck"]
 from WhereLives import WhereLives
+from WhereLives import DiskCheck

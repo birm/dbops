@@ -120,7 +120,7 @@ class WhereLives(object):
                       self.searchkey.lower() in x[0].lower()]
         else:
             result = [x for x in schema_list if
-                      self.searchkey.lower() in x[0].lower()]
+                      self.searchkey.lower() in x[1].lower()]
         return result
 
 if __name__ == "__main__":
