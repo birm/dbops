@@ -11,6 +11,7 @@ Tools:
   **DiskCheck**: get a report on which hosts are low on disk space
     Command line:
       ''python -m dbops.DiskCheck (warn threshold, gb) (hostlist file)''
+  **SqlParser**: Analyze your sql statements **UNDER CONSTRUCTION***
 
 More Tools coming.
 
