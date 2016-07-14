@@ -1,4 +1,5 @@
-__all__ = ["WhereLives", "DiskCheck", "SqlParser"]
+__all__ = ["WhereLives", "DiskCheck", "SqlParser", "RhelKick"]
 from WhereLives import WhereLives
-from WhereLives import DiskCheck
+from DiskCheck import DiskCheck
 from SqlParser import SqlParser
+from RhelKick import RhelKick

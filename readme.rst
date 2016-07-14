@@ -12,6 +12,7 @@ Tools:
     Command line:
       ''python -m dbops.DiskCheck (warn threshold, gb) (hostlist file)''
   **SqlParser**: Analyze your sql statements **UNDER CONSTRUCTION***
+  **RhelKick**: Automatically build RHEL servers **UNDER CONSTRUCTION***
 
 More Tools coming.
 
