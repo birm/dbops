@@ -74,8 +74,10 @@ class WhereLives(object):
                 permissions = permissions.read().splitlines()
                 temp_per = {}
                 try:
-                    temp_per['username'] = permissions[1]
-                    temp_per['password'] = permissions[2]
+                    un = [z for z in permissions if z.startswith('user')]
+                    pw = [z for z in permissions if z.startswith('password')]
+                    temp_per['username'] = un[0].replace("user=", "")
+                    temp_per['password'] = pw[0].replace("password=", "")
                 except IndexError:
                     raise TypeError("permissions missing information")
                 self.permissions = temp_per
@@ -87,7 +89,7 @@ class WhereLives(object):
 
     def __str__(self):
         """Return a string for command line invoke."""
-        a = "Wherelives searching for " + self.searchkey + "on "
+        a = "Wherelives searching for " + self.searchkey + " on "
         return a + str(self.hostlist)
 
     def get_schema(self):
@@ -114,21 +116,23 @@ class WhereLives(object):
 
     def search(self):
         """Perform a search as specified in object type."""
-        schema_list = self.get_schema()
+        schema_list = [q for r in self.get_schema() for q in r]
         if self.reverse:
             result = [x for x in schema_list if
-                      self.searchkey.lower() in x[0].lower()]
+                      self.searchkey in x[0]]
         else:
             result = [x for x in schema_list if
-                      self.searchkey.lower() in x[1].lower()]
+                      self.searchkey in x[1]]
         return result
 
 if __name__ == "__main__":
     import sys
-    args = ['test', ['localhost'],
-            {'username': 'root', 'password': 'toor'}, 'my', 'false']
-    for x in range(0, len(sys.argv)-1):
+    import os
+    user_my = os.path.expanduser("~/.my.cnf")
+    args = ['nothing', 'test', ['localhost'],
+            user_my, 'my', 0]
+    for x in range(1, len(sys.argv)):
         args[x] = sys.argv[x]
-    searcher = WhereLives(args[0], args[1], args[2], args[3], args[4])
+    searcher = WhereLives(args[1], args[2], args[3], args[4], args[5])
     print((searcher.__str__())+'\n')
     print(searcher.search())
