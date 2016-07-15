@@ -21,7 +21,6 @@ class RhelKick(object):
 
     def __init__(self, folder="/root/kickstart", services=None, options=None):
         """initalize, trying to normalize input."""
-        raise FutureWarning("RhelKick under construction.")
         # get ready for kickstart file creation
         self.kickfile = open(folder+'rhelkick-ks.cfg', 'w+')
         # start time
