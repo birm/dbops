@@ -11,8 +11,11 @@ Tools:
   **DiskCheck**: get a report on which hosts are low on disk space
     Command line:
       ''python -m dbops.DiskCheck (warn threshold, gb) (hostlist file)''
-  **SqlParser**: Analyze your sql statements **UNDER CONSTRUCTION***
-  **RhelKick**: Automatically build RHEL servers **UNDER CONSTRUCTION***
+  **SqlParser**: Analyze your sql statements **UNDER CONSTRUCTION**
+  **RhelKick**: Automatically build RHEL servers.
+    Command line:
+      ''python -m dbops.RhelKick (work directory) (options file)
+       (service list file)''
 
 More Tools coming.
 
