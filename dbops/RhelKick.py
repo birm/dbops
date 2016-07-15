@@ -161,6 +161,7 @@ class RhelKick(object):
             """)
 
     def unpack_ansible(self):
+        """unpack and run ansible items."""
         self.kickfile.write("""echo Installing ansible
         sudo easy_install pip
         pip install ansible
