@@ -243,4 +243,4 @@ if __name__ == "__main__":
             "/root/rhelkick/services.cfg"]
     for x in range(1, len(sys.argv)):
         args[x] = sys.argv[x]
-    rk = RhelKick(args[1],args[2],args[3])
+    rk = RhelKick(args[1], args[2], args[3])
