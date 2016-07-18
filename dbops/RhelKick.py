@@ -8,7 +8,7 @@ import os
 import time
 import datetime
 import socket
-
+import pyftpdlib
 
 class RhelKick(object):
     """An object to keep track of server options and hosted items.
@@ -21,6 +21,7 @@ class RhelKick(object):
 
     def __init__(self, folder="/root/kickstart", services=None, options=None):
         """initalize, trying to normalize input."""
+        self.port = 8080
         # get ready for kickstart file creation
         self.kickfile = open(folder+'rhelkick-ks.cfg', 'w+')
         # start time
@@ -135,7 +136,7 @@ class RhelKick(object):
                                 "--size=" + home + "--grow\n")
         self.kickfile.write("\n")
 
-    def write_next_host_tool(self):
+    def writeNextHostTool(self):
         """Add the tool to automatically name the host."""
         hpatt = self.options.get("hostpattern", "build")
         self.kickfile.write("AVAIL=FALSE\nnewhn=" + hpatt + "0\nCOUNTER=1")
@@ -160,7 +161,7 @@ class RhelKick(object):
             echo DHCP_HOSTNAME=$newhn >> /etc/sysconfig/network-scripts/ifcfg-eth0
             """)
 
-    def unpack_ansible(self):
+    def unpackAnsible(self):
         """unpack and run ansible items."""
         self.kickfile.write("""echo Installing ansible
         sudo easy_install pip
@@ -180,7 +181,7 @@ class RhelKick(object):
         # install section
         self.kickfile.write("install\n")
         myip = self.get_ip(self.options.get("ext_host", "8.8.8.8"))
-        webpath = "url --url http://" + myip
+        webpath = "url --url http://" + myip + ":" + self.port
         self.kickfile.write(webpath + "\n")
         lang = self.options.get("lang", "en_US.UTF-8")
         self.kickfile.write("lang " + lang + "\n")
@@ -231,11 +232,34 @@ class RhelKick(object):
 
         # post-install
         if not (self.options.get("hostpattern", "no").upper() == "NO"):
-            self.write_next_host_tool()
+            self.writeNextHostTool()
 
         if not (self.options.get("ansible_tar", "no").upper() == "NO"):
-                    self.unpack_ansible()
+                    self.unpackAnsible()
 
+    def hostFiles(self):
+        """host the image and files required for kickstart install/config."""
+        os.chdir(self.folder)
+        address = ("0.0.0.0", self.port)
+        server = pyftpdlib.servers.FTPServer(address, pyftpdlib.FTPHandler)
+        server.serve_forever()
+
+    def preparePxe(self, install=False):
+        """run commands to get pxe ready. RHEL-like only."""
+        "https://www.unixmen.com/install-pxe-server-and-configure-pxe-client-on-centos-7/"
+        if install:
+            os.system("yum install syslinux")
+        os.system("cp -r /usr/share/syslinux/* " + self.folder)
+        # TODO templatize this file
+        os.system("vi " + self.folder + "/pxelinux.cfg/default")
+
+    def prepareImage(self, url="http://mirrors.xservers.ro/centos/7.0.1406/" +
+                     "isos/x86_64/CentOS-7.0-1406-x86_64-DVD.iso"):
+        """Get and prepare iso image."""
+        os.chdir(self.folder)
+        os.system("wget " + url)
+        os.system("mount -o loop " + url.split("/")[-1] + " /mnt/")
+        os.system("cp -fr /mnt/* " + self.folder + "/centos7_x64/")
 
 if __name__ == "__main__":
     import sys
@@ -245,3 +269,8 @@ if __name__ == "__main__":
     for x in range(1, len(sys.argv)):
         args[x] = sys.argv[x]
     rk = RhelKick(args[1], args[2], args[3])
+    rk.genKick()
+    rk.preparePxe()
+    rk.hostFiles()
+    if not (rk.options.get("srcurl", "NO") == "NO"):
+        rk.prepareImage(rk.options.get("srcurl", "NO"))
