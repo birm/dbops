@@ -22,6 +22,7 @@ class RhelKick(object):
     def __init__(self, folder="/root/kickstart", services=None, options=None):
         """initalize, trying to normalize input."""
         self.port = 8080
+        self.myip = self.get_ip(self.options.get("ext_host", "8.8.8.8"))
         # get ready for kickstart file creation
         self.kickfile = open(folder+'rhelkick-ks.cfg', 'w+')
         # start time
@@ -180,7 +181,7 @@ class RhelKick(object):
         """Use input services and options to create a kickstart file."""
         # install section
         self.kickfile.write("install\n")
-        myip = self.get_ip(self.options.get("ext_host", "8.8.8.8"))
+        myip = self.myip
         webpath = "url --url http://" + myip + ":" + self.port
         self.kickfile.write(webpath + "\n")
         lang = self.options.get("lang", "en_US.UTF-8")
@@ -244,14 +245,25 @@ class RhelKick(object):
         server = pyftpdlib.servers.FTPServer(address, pyftpdlib.FTPHandler)
         server.serve_forever()
 
-    def preparePxe(self, install=False):
+    def preparePxe(self, install=False, config=False):
         """run commands to get pxe ready. RHEL-like only."""
+        # TODO add dhcpd
         "https://www.unixmen.com/install-pxe-server-and-configure-pxe-client-on-centos-7/"
         if install:
+            os.system("yum install dhcpd")
             os.system("yum install syslinux")
+        if config:
+            adddhcpd = "\nallow booting;\nallow bootp;"
+            adddhcpd = adddhcpd + "\noption option-128 code 128 = string;"
+            adddhcpd = adddhcpd + "\noption option-129 code 129 = text;"
+            adddhcpd = adddhcpd + "\nnext-server " + self.myip + ";"
+            adddhcpd = adddhcpd + '\nfilename "pxelinux.0";'
+            os.system("echo '" + adddhcpd + "' >> /etc/dhcp/dhcpd.conf")
+        if install:
+            os.system("systemctl restart dhcpd")
+            os.system("systemctl enable dhcpd")
         os.system("cp -r /usr/share/syslinux/* " + self.folder)
-        # TODO templatize this file
-        os.system("vi " + self.folder + "/pxelinux.cfg/default")
+        self.pxeMenu()
 
     def prepareImage(self, url="http://mirrors.xservers.ro/centos/7.0.1406/" +
                      "isos/x86_64/CentOS-7.0-1406-x86_64-DVD.iso"):
@@ -259,7 +271,19 @@ class RhelKick(object):
         os.chdir(self.folder)
         os.system("wget " + url)
         os.system("mount -o loop " + url.split("/")[-1] + " /mnt/")
-        os.system("cp -fr /mnt/* " + self.folder + "/centos7_x64/")
+        os.system("cp -fr /mnt/* " + self.folder + "/image/")
+
+    def pxeMenu(self):
+        menufile = "default menu.c32\nprompt 0\ntimeout 30"
+        menufile = menufile + "\nMENU TITLE DBOPS RhelKick"
+        menufile = menufile + "\nLABEL PXEfromDBOPS"
+        menufile = menufile + "\nMENU LABEL Rhellike as configured"
+        menufile = menufile + "\nKERNEL " + self.folder + "/image/"
+        menufile = menufile + "\nAPPEND  initrd=/netboot/initrd.img"
+        menufile = menufile + "  inst.repo=ftp://" + self.myip
+        menufile = menufile + " ks=ftp://" + self.myip + "/pub/rhelkick-ks.cfg"
+        os.system("echo '" + menufile + "' > " + self.folder +
+                  "/pxelinux.cfg/default")
 
 if __name__ == "__main__":
     import sys
@@ -270,7 +294,7 @@ if __name__ == "__main__":
         args[x] = sys.argv[x]
     rk = RhelKick(args[1], args[2], args[3])
     rk.genKick()
-    rk.preparePxe()
-    rk.hostFiles()
     if not (rk.options.get("srcurl", "NO") == "NO"):
         rk.prepareImage(rk.options.get("srcurl", "NO"))
+    rk.preparePxe()
+    rk.hostFiles()
