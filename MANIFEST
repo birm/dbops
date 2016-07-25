@@ -2,6 +2,7 @@
 setup.py
 dbops/DiskCheck.py
 dbops/RhelKick.py
+dbops/SchemaConv.py
 dbops/SqlParser.py
 dbops/WhereLives.py
 dbops/__init__.py

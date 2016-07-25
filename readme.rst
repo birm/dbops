@@ -13,6 +13,7 @@ Tools:
     Command line:
       ''python -m dbops.DiskCheck (warn threshold, gb) (hostlist file) (username) (full mode)''
   **SqlParser**: Analyze your sql statements **UNDER CONSTRUCTION**
+  **SchemaConv**: Document DB -> Relational DB **UNDER CONSTRUCTION**
   **RhelKick**: Automatically build RHEL servers and starts PXE.
     Command line:
       ''python -m dbops.RhelKick (work directory) (options file)
