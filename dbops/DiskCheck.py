@@ -43,27 +43,27 @@ class DiskCheck(object):
 
     def __str__(self):
         """Return a string for command line invoke."""
-        a = "DiskCheck warning for less than" + self.warnsize + "Gb free on "
+        a = "DiskCheck warning for less than " + str(self.warnsize)
+        a = a + "  Gb free on "
         return a + str(self.hostlist)
 
     def checkDevice(self, host, username):
         """check disk devices in more detail."""
         raid_disk_log = ""
-        md_list = subprocess.check_output("ssh -l " + username + " " + host +
+        md_list = subprocess.check_output("ssh " + username + " " + host +
                                           " 'ls /dev/md*; exit 0;'",
                                           stderr=subprocess.STDOUT, shell=True)
-        sd_list = subprocess.check_output("ssh -l " + username + " " + host +
-                                          '"ls /dev/sd*;  exit 0;"',
+        sd_list = subprocess.check_output("ssh " + username + " " + host +
+                                          " 'ls /dev/sd*;  exit 0;' ",
                                           stderr=subprocess.STDOUT, shell=True)
         swraid = [x.split("/")[2] for x in md_list.split("\n")
-                  if len(x.split("/")) > 2]
+                  if len(x.split("/")) > 2 and "cannot access" not in x]
         dsks = [x.split("/")[2] for x in sd_list.split("\n")
-                if len(x.split("/")) > 2]
+                if len(x.split("/")) > 2 and "cannot access" not in x]
         devices = dsks + swraid
 
         positives = ["operational", "mounted", "active",
-                     "resync done", "data-check"]
-        negatives = ["failed", "stopped", "not clean"]
+                     "resync", "data-check", "gsch_flt_add_mnt"]
 
         for x in devices:
             for y in positives:
@@ -74,18 +74,20 @@ class DiskCheck(object):
                                               '"; exit 0;"',
                                               stderr=subprocess.STDOUT,
                                               shell=True)
-                latest = res.splitlines()[-1]
-                raid_disk_log = raid_disk_log + "/n" + host + " : " + x
-                raid_disk_log = raid_disk_log + ": [positive] : " + latest
-            for y in negatives:
-                res = subprocess.check_output("ssh " + username +
-                                              host +
-                                              " 'dmesg | grep -i '" + x +
-                                              '" | grep -i "' + y +
-                                              '"; exit 0;"',
-                                              stderr=subprocess.STDOUT,
-                                              shell=True)
-                latest = res.splitlines()[-1]
+                if res:
+                    latest = res.splitlines()[-1]
+                    raid_disk_log = raid_disk_log + "/n" + host + " : " + x
+                    raid_disk_log = raid_disk_log + ": [positive] : " + latest
+            res = subprocess.check_output("ssh " + username +
+                                          host +
+                                          " 'dmesg | grep -i '" + x +
+                                          '"; exit 0;"',
+                                          stderr=subprocess.STDOUT,
+                                          shell=True)
+            latest = [x for x in res.splitlines() if
+                      any(pos in x for pos in positives)]
+            if latest:
+                latest = latest[-1]
                 raid_disk_log = raid_disk_log + "/n" + host + " : " + x
                 raid_disk_log = raid_disk_log + ": [negative] : " + latest
         self.raid_disk_log = self.raid_disk_log + raid_disk_log
@@ -94,25 +96,27 @@ class DiskCheck(object):
         """Search through hosts to see which may have issues."""
         allres = []
         for host in self.hostlist:
-            subprocess.check_output("ssh " + self.username + host +
-                                    "df -g / | tail -1 | awk '{print $4}'")
+            command_torun = ("ssh " + self.username + host +
+                             " df -BG / | tail -1 | awk '{print $3}'")
+            stout = subprocess.check_output(command_torun, shell=True,
+                                            executable='/bin/bash')
             try:
-                allres.append([self.host, int(subprocess.stdout)])
+                allres.append([host, int(stout[:-2])])
             except ValueError:
-                raise RuntimeWarning("Host: " + self.host + " not included.")
+                raise RuntimeWarning("Host: " + host + " not included.")
 
         result = [x for x in allres if x[1] >= self.warnsize]
-        if self.full_search():
+        if self.full_search:
             self.checkDevice(host, self.username)
         return result
 
 
 if __name__ == "__main__":
     import sys
-    args = [10, ['localhost'], "root", False]
-    for x in range(0, len(sys.argv)-1):
+    args = ['nothing', 10, ['localhost'], "root", False]
+    for x in range(1, len(sys.argv)):
         args[x] = sys.argv[x]
-    searcher = DiskCheck(args[0], args[1], args[2], args[3])
+    searcher = DiskCheck(args[1], args[2], args[3], args[4])
     print((searcher.__str__())+'\n')
     print(searcher.search())
     if searcher.full_search:
