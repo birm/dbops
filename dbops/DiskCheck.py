@@ -78,6 +78,11 @@ class DiskCheck(object):
                     latest = res.splitlines()[-1]
                     raid_disk_log = raid_disk_log + "/n" + host + " : " + x
                     raid_disk_log = raid_disk_log + ": [positive] : " + latest
+            # quick md check
+            mdck = "cat /proc/mdstat | grep inactive"
+            mdres = subprocess.check_output(mdck,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True).splitlines()
             res = subprocess.check_output("ssh " + username +
                                           host +
                                           " 'dmesg | grep -i '" + x +
@@ -86,6 +91,9 @@ class DiskCheck(object):
                                           shell=True)
             latest = [x for x in res.splitlines() if
                       any(pos in x for pos in positives)]
+            if mdres:
+                raid_disk_log = raid_disk_log + "/n" + host + " : " + x
+                raid_disk_log = raid_disk_log + ": [critical] : " + mdres
             if latest:
                 latest = latest[-1]
                 raid_disk_log = raid_disk_log + "/n" + host + " : " + x
