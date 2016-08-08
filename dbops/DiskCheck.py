@@ -79,7 +79,7 @@ class DiskCheck(object):
                     raid_disk_log = raid_disk_log + "/n" + host + " : " + x
                     raid_disk_log = raid_disk_log + ": [positive] : " + latest
             # quick md check
-            mdck = "cat /proc/mdstat | grep inactive"
+            mdck = "cat /proc/mdstat | grep inactive ; exit 0;"
             mdres = subprocess.check_output(mdck,
                                             stderr=subprocess.STDOUT,
                                             shell=True).splitlines()
