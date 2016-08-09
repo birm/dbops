@@ -129,7 +129,7 @@ if __name__ == "__main__":
     import sys
     import os
     user_my = os.path.expanduser("~/.my.cnf")
-    args = ['nothing', 'test', ['localhost'],
+    args = ['nothing', 'test', 'hosts.txt',
             user_my, 'my', 0]
     for x in range(1, len(sys.argv)):
         args[x] = sys.argv[x]
