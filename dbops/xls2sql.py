@@ -50,3 +50,16 @@ class Xls2Sql(object):
                         beta = "'" + (thecell) + "'"
                     query = query + " (" + alpha + "," + beta + "),"
         return query[:-1]  # remove last comma and return
+
+
+if __name__ == "__main__":
+    import sys
+    args = ['nothing', 'Id', 'SecId', 'Name', 'dual', 'patch.xls',
+            {"Id": 1, "Name": 2}, "", 1, 2, 3, 'mysql.user', 'mysql.user',
+            'schemadb']
+    for x in range(1, len(sys.argv)):
+        args[x] = sys.argv[x]
+    searcher = Xls2Sql(args[1], args[2], args[3], args[4], args[5], args[6],
+                       args[7], range(args[8], args[9]), args[10], args[11],
+                       args[12], args[13])
+    print(searcher.query_gen_2())

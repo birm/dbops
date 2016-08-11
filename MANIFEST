@@ -6,3 +6,4 @@ dbops/SchemaConv.py
 dbops/SqlParser.py
 dbops/WhereLives.py
 dbops/__init__.py
+dbops/xls2sql.py
