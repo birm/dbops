@@ -34,7 +34,8 @@ class Xls2Sql(object):
             alpha = "(select " + self.a + " from " + self.t1 + " where "
             for key, value in self.findopt.iteritems():
                 alpha = alpha + "'" + key + "'" + " = "
-                alpha = alpha + "'" + row[value] + "'" + " and "
+                alpha = alpha + "'" + row[value].replace("'", r"\'")
+                alpha = alpha + "'" + " and "
             alpha = alpha[:-4] + " limit 1)"  # remove last 'and'
             for cn in self.range2:
                 try:
@@ -45,9 +46,10 @@ class Xls2Sql(object):
                     if self.lookup:
                         beta = "(select " + self.lookup + " from "
                         beta = beta + self.t2 + " where " + self.c + " = '"
-                        beta = beta + (thecell) + "' limit 1)"
+                        beta = beta + (thecell).replace("'", r"\'")
+                        beta = beta + "' limit 1)"
                     else:
-                        beta = "'" + (thecell) + "'"
+                        beta = "'" + (thecell).replace("'", r"\'") + "'"
                     query = query + " (" + alpha + "," + beta + "),"
         return query[:-1]  # remove last comma and return
 
