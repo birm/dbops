@@ -109,7 +109,7 @@ class ArcDel(object):
         except BaseException:
             dbcon = False
             errstr = "Error connecting to DB."
-            raise ConnectionError(errstr)
+            raise RuntimeError(errstr)
         try:
             yield dbcon
         finally:
