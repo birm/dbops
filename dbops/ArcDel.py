@@ -8,7 +8,8 @@ records with a datetime field..
 from sqlalchemy import create_engine, inspect
 from contextlib import contextmanager
 
-class ArcDel(Object)
+
+class ArcDel(object):
     """An object to keep track of deletion or archival.
 
     Args:
@@ -19,6 +20,7 @@ class ArcDel(Object)
         dbtype: The database server type. (e.g: 'my', 'pg', 'lt', 'ms')
             see dbmap for supported types and abbreviations.
         host: A connection string, e.g. mysql://localhost
+        limit: Number of records to do per batch, max
         permissions: A dict, list, file, or file path containing username
             and password.
     """
@@ -28,12 +30,19 @@ class ArcDel(Object)
 
     def __init__(self, field="CreatedAt", oldtime="1970-01-01",
                  database="dual", dbtype="my", host="localhost",
-                 permissions=None):
+                 limit=10, permissions=None):
         """Intalize object for connection and tracking."""
         raise NotImplementedError("ArcDel under construction")
         self.dbtype = self.dbmap[dbtype]
         # establish that we are not connected
         self.engine = False
+        # other variable assignment
+        self.limit = limit
+        self.host = host
+        self.database = database
+        self.table = table
+        self.field = field
+        self.oldtime = oldtime
         # let permissions None work
         if permissions is None:
             self.permissions = None
@@ -108,7 +117,8 @@ class ArcDel(Object)
 
     def delete(self):
         """Delete records from db where date contition met."""
-        with connection(self) as con:
+        with self.connection() as con:
+            pass
             # find count of match criteria:
                 # delete (n) matches
                 # print next match to screen
@@ -116,7 +126,8 @@ class ArcDel(Object)
 
     def archive(self):
         """Archive records from db where date contition met."""
-        with connection(self) as con:
+        with self.connection() as con:
+            pass
             # find count of match criteria
                 # write (n) matches to file
                 # print next match to screen
