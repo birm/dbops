@@ -2,7 +2,7 @@ dbops
 =====
 A collection of tools for managing database servers.
 
-Tools:
+Python Tools:
   **WhereLives**: quickly determine which host a database is on,
     or which databases are on a host.
       Command line:
@@ -18,6 +18,10 @@ Tools:
     Command line:
       ''python -m dbops.RhelKick (work directory) (options file)
        (service list file)''
+       
+Bash Tools/Interfaces:
+  **wl.sh**: an interface for WhereLives, simplified further.
+  **daud.sh**: a wrapper for common audit procedures using pt-toolkit.
 
 More Tools coming.
 
