@@ -1,13 +1,18 @@
 import os
 
 class PatchExpander(object):
-    """expand a patch (or other file) with a keyword"""
+    """Expand a patch (or other file) with a keyword.
+        args:
+            pattern: regex of the text to replace
+            names_file: file containing list of files to modify."""
     def __init__(self, pattern="\${database\.name}", names_file="names.txt"):
         """initalize the conversion."""
         self.pattern = pattern
         self.names_file = names_file
 
     def expand(self):
+        """Perorm the Expansion.
+        No arguments needed as all are passed in on construction."""
         command = """for file in $(grep """ + self.pattern + """ -lR *) ; do
           line=$(sed -n "/""" + self.pattern + """/p" $file)
           cat """ + self.names_file + """ | while read line2

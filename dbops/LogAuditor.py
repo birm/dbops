@@ -6,19 +6,19 @@ import re
 
 class LogAuditor(object):
     """Get and search through remote audit logs.
-            Inputs:
-                locations: a list of locations
-                    locations should be formatted like host:/path/to/audit.log
-                logging: a string of logging and output options.
-                    Include the character in the string to enable the option.
-                    Options:
-                    pick one of:
-                        s: optimize for screen (default)
-                        f: optimize for out file
-                        m: minimal output
-                    and any of:
-                        p: log to python logging
-                        s: log to syslog."""
+        Args:
+            locations: a list of locations
+                locations should be formatted like host:/path/to/audit.log
+            logging: a string of logging and output options.
+                Include the character in the string to enable the option.
+                Options:
+                pick one of:
+                    s: optimize for screen (default)
+                    f: optimize for out file
+                    m: minimal output
+                and any of:
+                    p: log to python logging
+                    s: log to syslog."""
 
     def __init__(self, locations, logging):
         """Internal. Initalize the auditor."""

@@ -84,16 +84,16 @@ class WhereLives(object):
         self.reverse = reverse
 
     def __repr__(self):
-        """Return a string for python."""
+        """Internal. Return a string for python."""
         return "WhereLives object searching for " + self.searchkey
 
     def __str__(self):
-        """Return a string for command line invoke."""
+        """Internal. Return a string for command line invoke."""
         a = "Wherelives searching for " + self.searchkey + " on "
         return a + str(self.hostlist)
 
-    def get_schema(self):
-        """Get all databases for listed hosts.
+    def _get_schema(self):
+        """Internal. Get all databases for listed hosts.
 
         Returns:
             list of lists, in the form [host, database]
@@ -115,8 +115,9 @@ class WhereLives(object):
         return res
 
     def search(self):
-        """Perform a search as specified in object type."""
-        schema_list = [q for r in self.get_schema() for q in r]
+        """Perform a search as specified in object type.
+        Does not take any arguments, as all are passed in for construction."""
+        schema_list = [q for r in self._get_schema() for q in r]
         if self.reverse:
             result = [x for x in schema_list if
                       self.searchkey in x[0]]
