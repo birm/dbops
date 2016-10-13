@@ -12,18 +12,9 @@ Python Tools:
     Use full mode to get more detailed information about errors and successes, including md raid
     Command line:
       ''python -m dbops.DiskCheck (warn threshold, gb) (hostlist file) (username) (full mode)''
-  **SqlParser**: Analyze your sql statements **UNDER CONSTRUCTION**
-  **SchemaConv**: Document DB -> Relational DB **UNDER CONSTRUCTION**
-  **RhelKick**: Automatically build RHEL servers and starts PXE.
-    Command line:
-      ''python -m dbops.RhelKick (work directory) (options file)
-       (service list file)''
-       
+
 Bash Tools/Interfaces:
   **wl.sh**: an interface for WhereLives, simplified further.
   **daud.sh**: a wrapper for common audit procedures using pt-toolkit.
 
 More Tools coming.
-
-Versions of form:
-{tool version}.{number of tools}.{small updates}

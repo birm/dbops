@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='dbops',
-      version='1.7.2',
+      version='2.0.0',
       description='Database Operations Tools',
       author='Ryan Birmingham',
       author_email='birm@rbirm.us',
