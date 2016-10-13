@@ -1,0 +1,18 @@
+This document aims to explain what was deleted between 1.* and 2.*, and why.
+
+lack of relevance to the project:
+    SqlParser
+    RhelKick - move to different project
+
+
+poorly defined:
+    SchemaConv
+
+too specific:
+    xls2sql
+
+better tools exist:
+    ArcDel
+
+desire to replace with better tool later:
+    DiskCheck (with other statistics)
