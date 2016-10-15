@@ -1,8 +1,5 @@
-import sys, os
-sys.path.append(os.path.abspath('../'))
-
-from dbops.WhereLives import WhereLives
-from dbops.PatchExpander import PatchExpander
+from dbops import WhereLives
+from dbops import PatchExpander
 
 def test_wherelives_default_init():
     wl = WhereLives()
