@@ -2,7 +2,7 @@ __all__ = ["WhereLives",
            "PatchExpander"
            "HealthCheck",
            "LogAuditor"]
-from WhereLives import WhereLives
-from HealthCheck import HealthCheck
-from PatchExpander import PatchExpander
-from LogAuditor import LogAuditor
+from dbops.WhereLives import WhereLives
+from dbops.HealthCheck import HealthCheck
+from dbops.PatchExpander import PatchExpander
+from dbops.LogAuditor import LogAuditor

@@ -1,4 +1,4 @@
-class HealthCheck(Object):
+class HealthCheck(object):
     """Determine the extent of damage or change to a rdbms."""
     def __init__(self):
       raise NotImplementedError("HealthCheck under construction")
