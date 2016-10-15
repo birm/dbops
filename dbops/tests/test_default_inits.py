@@ -1,3 +1,6 @@
+import sys, os
+sys.path.append(os.path.abspath('../'))
+
 from dbops.WhereLives import WhereLives
 from dbops.PatchExpander import PatchExpander
 
