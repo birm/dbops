@@ -1,3 +1,6 @@
+from dbops import WhereLives
+from dbops import PatchExpander
+
 def test_wherelives_default_init():
     wl = WhereLives()
     
