@@ -22,8 +22,8 @@ class LogAuditor(object):
 
     def __init__(self, locations, logging):
         """Internal. Initalize the auditor."""
-            self.locations = locations
-            self.logging = logging
+        self.locations = locations
+        self.logging = logging
 
     def _parse_logging(self, logging):
         """Parse through flags in the string.
