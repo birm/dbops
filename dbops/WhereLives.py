@@ -26,7 +26,7 @@ class WhereLives(object):
     dbmap = {'my': 'mysql', 'pg': 'postgresql', 'or': 'oracle',
              'ms': 'mssql', 'lt': 'sqlite', 'rs': 'redshift'}
 
-    def __init__(self, searchkey=None, hostlist=None,
+    def __init__(self, searchkey="User", hostlist="localhost",
                  permissions=None, dbtype="my", reverse=False):
         """initalize, trying to normalize input."""
         self.dbtype = self.dbmap[dbtype]
