@@ -8,4 +8,4 @@ install:
     - travis_retry python setup.py install
     
 script:
-    - py.test
+    - py.test dbops/tests/test_default_inits.py
