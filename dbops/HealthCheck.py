@@ -33,7 +33,7 @@ class HealthCheck(Object):
       set password for 'myhealth2'@'%' = PASSWORD('myhealth');
       flush privileges;"""
       connection = engine.connect()
-      connection.execute(sqlalchemy.text(command)).execution_options(autocommit=True))
+      connection.execute(sqlalchemy.text(command)).execution_options(autocommit=True)
 
     #[did passwords change]
     #[did password alg change]
