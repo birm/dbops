@@ -8,6 +8,6 @@ setup(name='dbops',
       url='http://rbirm.us',
       classifiers=['Development Status :: 4 - Beta', 'Topic :: Database',
                    'Intended Audience :: Information Technology'],
-      long_description=open('README.txt', 'r').read(),
+      long_description=open('readme.txt', 'r').read(),
       packages=['dbops'],
       )
