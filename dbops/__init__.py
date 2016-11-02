@@ -9,4 +9,4 @@ from dbops.HealthCheck import HealthCheck
 from dbops.PatchExpander import PatchExpander
 from dbops.LogAuditor import LogAuditor
 from dbops.AssertDB import AssertDB
-from CommandMultiRun import CommandMultiRun
+from dbops.CommandMultiRun import CommandMultiRun
