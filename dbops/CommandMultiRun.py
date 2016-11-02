@@ -28,7 +28,7 @@ class CommandMultiRun(object):
     def output(self, result, mode="print"):
         """Do what is expected with the commands as they come."""
         if mode == "print":
-            print result
+            print(result)
         elif mode == "bash":
             os.system(result)
         else:
