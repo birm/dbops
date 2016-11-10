@@ -41,7 +41,7 @@ class RecursiveDep(object):
 
     def _find_deps(self, tablename):
         """Find dependencies for a given table, given by name."""
-        dep_query = """select REFERENCED_TABLE_NAME from information_schema.KEY_COLUMN_USAGE
+        dep_query = """select TABLE_NAME from information_schema.KEY_COLUMN_USAGE
         where TABLE_SCHEMA = "{db}" and REFERENCED_TABLE_NAME = "{table}"
         and referenced_column_name is not NULL;""".format(db=self.database,
                                                           table=tablename)
