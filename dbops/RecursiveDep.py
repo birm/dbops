@@ -1,3 +1,5 @@
+import os
+
 class RecursiveDep(object):
 
     """
@@ -16,20 +18,34 @@ class RecursiveDep(object):
         self.form = form
         self.storage = set()  # set of lists for result
 
+    def _run_mysql(self, command):
+        """Run the mysql query and get the result as a list."""
+        cmd = ["mysql",  "-h", self.host, self.database,
+               "-sss", "-e", "\"{command};\"".format(command=command)]
+        return os.subprocess.check_output(cmd).splitlines()
+
     def find(self):
         """Find, store, and show all dependencies."""
         # get tables in db
-        # call _find_deps for all
-        pass
+        table_query = "select TABLE_NAME from information_schema.TABLES \
+        where TABLE_SCHEMA='{db}'".format(db=self.database)
+        tables = self._run_mysql(table_query)
+        # call _find_deps for all and store
+        for table in tables:
+            self._store(table, self._find_deps(table))
         # call the appropriate result function
 
-    def _store(self, from_db, to_db):
+    def _store(self, from_table, to_table):
         """Store the result to internal variable."""
-        pass
+        self.storage.add([from_table, to_table])
 
     def _find_deps(self, tablename):
         """Find dependencies for a given table, given by name."""
-        pass
+        dep_query = """select REFERENCED_TABLE_NAME from information_schema.KEY_COLUMN_USAGE
+        where TABLE_SCHEMA = "{db}" and REFERENCED_TABLE_NAME = "{table}"
+        and referenced_column_name is not NULL;""".format(db=self.database,
+                                                          table=tablename)
+        return self._run_mysql(dep_query)
 
     def _graph_result(self):
         """The result display function for the graph output."""
