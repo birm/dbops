@@ -20,8 +20,10 @@ A collection of tools for managing database servers.
 
 Bash Tools/Interfaces:
 
-## wl.sh ##: an interface for WhereLives, simplified further.
+## wl.sh ##
+an interface for WhereLives, simplified further.
   
-  ## daud.sh ##: a wrapper for common audit procedures using pt-toolkit.
+## daud.sh ##
+a wrapper for common audit procedures using pt-toolkit.
 
 More Tools coming.
