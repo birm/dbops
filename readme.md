@@ -11,7 +11,6 @@ A collection of tools for managing database servers.
         ''python -m dbops.WhereLives (search key) (hostlist file)
          (permissions file) (server type) (reverse mode)''
          
-         
 ## DiskCheck ## 
   get a report on which hosts are low on disk space
     Use full mode to get more detailed information about errors and successes, including md raid
