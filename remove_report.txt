@@ -7,15 +7,18 @@ lack of relevance to the project:
 moved to new project due to use cases
     RhelKick
     AssertDB
+    HealthCheck
 
 poorly defined:
     SchemaConv
+    LogAuditor
 
 too specific:
     xls2sql
 
 better tools exist:
     ArcDel
+    LogAuditor
 
 desire to replace with better tool later:
     DiskCheck (with other statistics)
