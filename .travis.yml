@@ -10,3 +10,6 @@ install:
     
 script:
     - py.test dbops/tests/test_default_inits.py
+
+notifications:
+  slack: rbirm:fjJKXGPbjyXSGAKKaOU6GWEh
