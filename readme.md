@@ -1,5 +1,7 @@
 dbops
 =====
+[![PyPI version](https://badge.fury.io/py/dbops.svg)](https://badge.fury.io/py/dbops)  [![Build Status](https://travis-ci.org/birm/dbops.svg?branch=master)](https://travis-ci.org/birm/dbops)
+
 A collection of tools for managing database servers.
 (http://www.rbirm.us/dbops/)
 
